@@ -43,19 +43,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class GrupoProfesorSpecificDaoImplementation extends TableGenericDaoImplementation {
+public class GrupoAlumnoSpecificDaoImplementation extends TableGenericDaoImplementation {
 
     private Integer idUsuario;
 
-    public GrupoProfesorSpecificDaoImplementation(Connection oPooledConnection, MetaBeanHelper oPuserBean_security, String strWhere) throws Exception {
+    public GrupoAlumnoSpecificDaoImplementation(Connection oPooledConnection, MetaBeanHelper oPuserBean_security, String strWhere) throws Exception {
         super("grupo", oPooledConnection, oPuserBean_security, strWhere);
 
         UsuarioSpecificBeanImplementation oUsuario = (UsuarioSpecificBeanImplementation) oPuserBean_security.getBean();
         idUsuario = oUsuario.getId();
-
-        String strSQLini = "FROM grupo WHERE id_usuario = " + idUsuario;
-
-        //Faltaba:
+                              
+        String strSQLini = "FROM grupo where 1=1 AND id IN (SELECT id_grupo FROM usuario where id = " + idUsuario + ")";
+                
         strSQL = "SELECT * " + strSQLini;
         strCountSQL = "SELECT COUNT(*) " + strSQLini;
         if (strWhere != null) {
