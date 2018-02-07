@@ -58,7 +58,7 @@ public class DependenciaProfesorSpecificDaoImplementation extends TableGenericDa
                 String strSQLini = "";
                 CentrosanitarioSpecificBeanImplementation oCentroSanitario = (CentrosanitarioSpecificBeanImplementation) oUsuario.getObj_centrosanitario().getBean();
                 idCentrosanitario = oCentroSanitario.getId();
-                strSQLini = "SELECT * FROM dependencia d WHERE AND d.id_centrosanitario = " + idCentrosanitario;
+                strSQLini = "SELECT * FROM dependencia d WHERE d.id_centrosanitario = " + idCentrosanitario;
                 strSQL = "SELECT * " + strSQLini;
                 strCountSQL = "SELECT COUNT(*) " + strSQLini;
                 if (strWhere != null) {
