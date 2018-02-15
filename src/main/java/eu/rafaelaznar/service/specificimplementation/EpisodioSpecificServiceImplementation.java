@@ -52,7 +52,6 @@ public class EpisodioSpecificServiceImplementation extends TableGenericServiceIm
             MetaBeanHelper oMetaBeanHelper = oUsuario.getObj_tipousuario();
             TipousuarioSpecificBeanImplementation oTipousuario = (TipousuarioSpecificBeanImplementation) oMetaBeanHelper.getBean();
             Integer idTipousuario = oTipousuario.getId();
-
             String strMethod = strMethodName.toLowerCase();
             switch (idTipousuario) {
                 case 1:
@@ -76,6 +75,10 @@ public class EpisodioSpecificServiceImplementation extends TableGenericServiceIm
                         case "getpage":
                             return true;
                         case "getcount":
+                            return true;
+                        case "getcountx":
+                            return true;
+                        case "getpagex":
                             return true;
                     }
                     break;
@@ -114,12 +117,16 @@ public class EpisodioSpecificServiceImplementation extends TableGenericServiceIm
                         case "get":
                             return true;
                         case "set":
-                            return true;
+                            return false;
                         case "remove":
                             return false;
                         case "getpage":
                             return true;
                         case "getcount":
+                            return true;
+                        case "getcountx":
+                            return true;
+                        case "getpagex":
                             return true;
                     }
                     break;

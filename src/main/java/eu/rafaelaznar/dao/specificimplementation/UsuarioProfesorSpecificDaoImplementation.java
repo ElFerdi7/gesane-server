@@ -40,6 +40,7 @@ import eu.rafaelaznar.bean.meta.helper.MetaObjectGenericBeanHelper;
 import eu.rafaelaznar.bean.meta.helper.MetaPropertyGenericBeanHelper;
 import eu.rafaelaznar.bean.publicinterface.GenericBeanInterface;
 import eu.rafaelaznar.bean.specificimplementation.CentrosanitarioSpecificBeanImplementation;
+import eu.rafaelaznar.bean.specificimplementation.TipousuarioSpecificBeanImplementation;
 import eu.rafaelaznar.bean.specificimplementation.UsuarioSpecificBeanImplementation;
 import eu.rafaelaznar.dao.genericimplementation.TableGenericDaoImplementation;
 import eu.rafaelaznar.factory.BeanFactory;
@@ -53,17 +54,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class UsuarioProfesorSpecificDaoImplementation extends TableGenericDaoImplementation {
+public class UsuarioProfesorSpecificDaoImplementation extends UsuarioSpecificDaoImplementation {
 
     private Integer idCentrosanitario = null;
     private Integer idUsuario = 0;
 
     public UsuarioProfesorSpecificDaoImplementation(Connection oPooledConnection, MetaBeanHelper oPuserBean_security, String strWhere) throws Exception {
-        super("usuario", oPooledConnection, oPuserBean_security, strWhere);
+        super(oPooledConnection, oPuserBean_security, strWhere);
         if (oPuserBean_security != null) {
             UsuarioSpecificBeanImplementation oUsuario = (UsuarioSpecificBeanImplementation) oPuserBean_security.getBean();
             idUsuario = oUsuario.getId();
-            if (oUsuario.getId() > 1) {
+            MetaBeanHelper ombhTipousuario = (MetaBeanHelper) oUsuario.getObj_tipousuario();
+            TipousuarioSpecificBeanImplementation oTipousuario= (TipousuarioSpecificBeanImplementation) ombhTipousuario.getBean();
+            if (oTipousuario.getId() == 3) {
                 String strSQLini = "";
 
                 CentrosanitarioSpecificBeanImplementation oCentroSanitario = (CentrosanitarioSpecificBeanImplementation) oUsuario.getObj_centrosanitario().getBean();
@@ -77,6 +80,7 @@ public class UsuarioProfesorSpecificDaoImplementation extends TableGenericDaoImp
                         + "                      AND g.id_usuario=u2.id "
                         + "                      AND u2.id_centrosanitario= " + idCentrosanitario + ")"
                         + ") ";
+
                 strSQL = "SELECT * " + strSQLini;
                 strCountSQL = "SELECT COUNT(*) " + strSQLini;
                 if (strWhere != null) {
@@ -131,14 +135,13 @@ public class UsuarioProfesorSpecificDaoImplementation extends TableGenericDaoImp
 //        }
 //        return oMetaBeanHelper;
 //    }
-    public Boolean checkUpdate(int id) {
-        if (id != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+//    public Boolean checkUpdate(int id) {
+//        if (id != 0) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
     @Override
     public Integer set(TableGenericBeanImplementation oBean) throws Exception {
         PreparedStatement oPreparedStatement = null;
@@ -269,90 +272,89 @@ public class UsuarioProfesorSpecificDaoImplementation extends TableGenericDaoImp
 //        }
 //        return oMetaBeanHelper;
 //    }
-    public MetaBeanHelper getFromLoginAndPass(UsuarioSpecificBeanImplementation oUsuarioBean) throws Exception {
-        PreparedStatement oPreparedStatement = null;
-        ResultSet oResultSet = null;
-        MetaBeanHelper oMetaBeanHelper = null;
-        strSQL += " AND login='" + oUsuarioBean.getLogin() + "'";
-        strSQL += " AND password='" + oUsuarioBean.getPassword() + "'";
-        try {
-            oPreparedStatement = oConnection.prepareStatement(strSQL);
-            oResultSet = oPreparedStatement.executeQuery();
-            if (oResultSet.next()) {
-                oUsuarioBean.setId(oResultSet.getInt("id"));
-                oMetaBeanHelper = this.get(oUsuarioBean.getId(), 3);
-            } else {
-                throw new Exception("UsuarioDao getFromLoginAndPass error");
-            }
-        } catch (Exception ex) {
-            String msg = this.getClass().getName() + ":" + (ex.getStackTrace()[0]).getMethodName() + " ob:" + ob;
-            Log4jHelper.errorLog(msg, ex);
-            throw new Exception(msg, ex);
-        } finally {
-            if (oResultSet != null) {
-                oResultSet.close();
-            }
-            if (oPreparedStatement != null) {
-                oPreparedStatement.close();
-            }
-        }
-        return oMetaBeanHelper;
-    }
-
-    public Integer getIDfromUser(String strLogin) throws Exception {
-        Integer intResult = null;
-        Statement oStatement = null;
-        ResultSet oResultSet = null;
-        try {
-            oStatement = (Statement) oConnection.createStatement();
-            String strSQL = "SELECT id FROM usuario WHERE login ='" + strLogin + "'";
-            oResultSet = oStatement.executeQuery(strSQL);
-            if (oResultSet.next()) {
-                intResult = oResultSet.getInt("id");
-            } else {
-                return 0;
-            }
-        } catch (SQLException ex) {
-            String msg = this.getClass().getName() + ":" + (ex.getStackTrace()[0]).getMethodName() + " ob:" + ob;
-            Log4jHelper.errorLog(msg, ex);
-            throw new Exception(msg, ex);
-        } finally {
-            if (oResultSet != null) {
-                oResultSet.close();
-            }
-            if (oStatement != null) {
-                oStatement.close();
-            }
-        }
-        return intResult;
-    }
-
-    public Integer getIDfromCodigoGrupo(String strCode) throws Exception {
-        Integer intResult = null;
-        Statement oStatement = null;
-        ResultSet oResultSet = null;
-        try {
-            oStatement = (Statement) oConnection.createStatement();
-            String strSQL = "SELECT id FROM grupo WHERE codigo ='" + strCode + "'";
-            oResultSet = oStatement.executeQuery(strSQL);
-            if (oResultSet.next()) {
-                intResult = oResultSet.getInt("id");
-            } else {
-                return 0;
-            }
-        } catch (SQLException ex) {
-            String msg = this.getClass().getName() + ":" + (ex.getStackTrace()[0]).getMethodName() + " ob:" + ob;
-            Log4jHelper.errorLog(msg, ex);
-            throw new Exception(msg, ex);
-        } finally {
-            if (oResultSet != null) {
-                oResultSet.close();
-            }
-            if (oStatement != null) {
-                oStatement.close();
-            }
-        }
-        return intResult;
-    }
-
+//    public MetaBeanHelper getFromLoginAndPass(UsuarioSpecificBeanImplementation oUsuarioBean) throws Exception {
+//        PreparedStatement oPreparedStatement = null;
+//        ResultSet oResultSet = null;
+//        MetaBeanHelper oMetaBeanHelper = null;
+//        strSQL += " AND login='" + oUsuarioBean.getLogin() + "'";
+//        strSQL += " AND password='" + oUsuarioBean.getPassword() + "'";
+//        try {
+//            oPreparedStatement = oConnection.prepareStatement(strSQL);
+//            oResultSet = oPreparedStatement.executeQuery();
+//            if (oResultSet.next()) {
+//                oUsuarioBean.setId(oResultSet.getInt("id"));
+//                oMetaBeanHelper = this.get(oUsuarioBean.getId(), 3);
+//            } else {
+//                throw new Exception("UsuarioDao getFromLoginAndPass error");
+//            }
+//        } catch (Exception ex) {
+//            String msg = this.getClass().getName() + ":" + (ex.getStackTrace()[0]).getMethodName() + " ob:" + ob;
+//            Log4jHelper.errorLog(msg, ex);
+//            throw new Exception(msg, ex);
+//        } finally {
+//            if (oResultSet != null) {
+//                oResultSet.close();
+//            }
+//            if (oPreparedStatement != null) {
+//                oPreparedStatement.close();
+//            }
+//        }
+//        return oMetaBeanHelper;
+//    }
+//
+//    public Integer getIDfromUser(String strLogin) throws Exception {
+//        Integer intResult = null;
+//        Statement oStatement = null;
+//        ResultSet oResultSet = null;
+//        try {
+//            oStatement = (Statement) oConnection.createStatement();
+//            String strSQL = "SELECT id FROM usuario WHERE login ='" + strLogin + "'";
+//            oResultSet = oStatement.executeQuery(strSQL);
+//            if (oResultSet.next()) {
+//                intResult = oResultSet.getInt("id");
+//            } else {
+//                return 0;
+//            }
+//        } catch (SQLException ex) {
+//            String msg = this.getClass().getName() + ":" + (ex.getStackTrace()[0]).getMethodName() + " ob:" + ob;
+//            Log4jHelper.errorLog(msg, ex);
+//            throw new Exception(msg, ex);
+//        } finally {
+//            if (oResultSet != null) {
+//                oResultSet.close();
+//            }
+//            if (oStatement != null) {
+//                oStatement.close();
+//            }
+//        }
+//        return intResult;
+//    }
+//
+//    public Integer getIDfromCodigoGrupo(String strCode) throws Exception {
+//        Integer intResult = null;
+//        Statement oStatement = null;
+//        ResultSet oResultSet = null;
+//        try {
+//            oStatement = (Statement) oConnection.createStatement();
+//            String strSQL = "SELECT id FROM grupo WHERE codigo ='" + strCode + "'";
+//            oResultSet = oStatement.executeQuery(strSQL);
+//            if (oResultSet.next()) {
+//                intResult = oResultSet.getInt("id");
+//            } else {
+//                return 0;
+//            }
+//        } catch (SQLException ex) {
+//            String msg = this.getClass().getName() + ":" + (ex.getStackTrace()[0]).getMethodName() + " ob:" + ob;
+//            Log4jHelper.errorLog(msg, ex);
+//            throw new Exception(msg, ex);
+//        } finally {
+//            if (oResultSet != null) {
+//                oResultSet.close();
+//            }
+//            if (oStatement != null) {
+//                oStatement.close();
+//            }
+//        }
+//        return intResult;
+//    }
 }

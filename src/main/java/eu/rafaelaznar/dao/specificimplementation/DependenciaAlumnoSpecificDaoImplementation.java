@@ -32,20 +32,12 @@
  */
 package eu.rafaelaznar.dao.specificimplementation;
 
-import eu.rafaelaznar.bean.genericimplementation.TableGenericBeanImplementation;
 import eu.rafaelaznar.bean.helper.MetaBeanHelper;
-import eu.rafaelaznar.bean.meta.helper.MetaObjectGenericBeanHelper;
-import eu.rafaelaznar.bean.meta.helper.MetaPropertyGenericBeanHelper;
 import eu.rafaelaznar.bean.specificimplementation.CentrosanitarioSpecificBeanImplementation;
 import eu.rafaelaznar.bean.specificimplementation.GrupoSpecificBeanImplementation;
 import eu.rafaelaznar.bean.specificimplementation.UsuarioSpecificBeanImplementation;
 import eu.rafaelaznar.dao.genericimplementation.TableGenericDaoImplementation;
-import eu.rafaelaznar.factory.BeanFactory;
-import eu.rafaelaznar.helper.Log4jHelper;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 
 /**
  *
